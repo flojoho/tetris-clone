@@ -40,7 +40,7 @@ const tetrominoes = [
 export default class PositionedPiece {
     constructor() {
         this.x = 4;
-        this.y = 23;
+        this.y = 22;
         const randomIndex = Math.floor(Math.random() * tetrominoes.length);
         this.grid = tetrominoes[randomIndex];
     }

@@ -47,7 +47,7 @@ export default class PositionedPiece {
 
   constructor() {
     this.x = 4;
-    this.y = 23;
+    this.y = 22;
     
     const randomIndex = Math.floor(Math.random() * tetrominoes.length)
 

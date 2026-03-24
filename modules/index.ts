@@ -4,7 +4,7 @@ const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
 
 const fps = 50;
-const tickDuration = 200;
+const tickDuration = 500;
 
 let lastStepTime = Date.now();
 
@@ -163,5 +163,9 @@ addEventListener('keydown', e => {
     activePiece.rotateRight();
   } else if(keyCode === 'ArrowDown') {
     if(!checkCollision(0, -1)) activePiece.move(0, -1);
+  } else if(keyCode === 'Space') {
+    while(!checkCollision(0, -1)) {
+      activePiece.move(0, -1);
+    }
   }
 });
