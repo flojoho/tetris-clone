@@ -34,21 +34,24 @@ const grid = {
     array: Array.from({ length: gridHeight + 5 }, () => Array.from({ length: gridWidth }, () => false))
 };
 const squareWidth = 30;
+const solidifyActivePiece = () => {
+    const pieceGrid = activePiece.grid;
+    for (let i = 0; i < pieceGrid.length; i++) {
+        const row = pieceGrid[i];
+        for (let j = 0; j < row.length; j++) {
+            const entry = row[j];
+            if (entry) {
+                const x = activePiece.x + j;
+                const y = activePiece.y - i;
+                grid.array[y][x] = { x, y, color: 'white' };
+            }
+        }
+    }
+};
 setInterval(() => {
     if (Date.now() - lastStepTime > tickDuration) {
         if (checkCollision(0, -1)) {
-            const pieceGrid = activePiece.grid;
-            for (let i = 0; i < pieceGrid.length; i++) {
-                const row = pieceGrid[i];
-                for (let j = 0; j < row.length; j++) {
-                    const entry = row[j];
-                    if (entry) {
-                        const x = activePiece.x + j;
-                        const y = activePiece.y - i;
-                        grid.array[y][x] = { x, y, color: 'white' };
-                    }
-                }
-            }
+            solidifyActivePiece();
             activePiece = new PositionedPiece();
         }
         else {
@@ -129,5 +132,7 @@ addEventListener('keydown', e => {
         while (!checkCollision(0, -1)) {
             activePiece.move(0, -1);
         }
+        solidifyActivePiece();
+        activePiece = new PositionedPiece();
     }
 });
