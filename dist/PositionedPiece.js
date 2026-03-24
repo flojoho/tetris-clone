@@ -37,12 +37,15 @@ const tetrominoes = [
         [false, false, false]
     ]
 ];
-export default class PositionedPiece {
+class PositionedPiece {
     constructor() {
         this.x = 4;
         this.y = 22;
-        const randomIndex = Math.floor(Math.random() * tetrominoes.length);
-        this.grid = tetrominoes[randomIndex];
+        if (PositionedPiece.buffer.length === 0)
+            PositionedPiece.buffer = [...tetrominoes];
+        const randomIndex = Math.floor(Math.random() * PositionedPiece.buffer.length);
+        this.grid = PositionedPiece.buffer[randomIndex];
+        PositionedPiece.buffer.splice(randomIndex, 1);
     }
     move(dx, dy) {
         this.x += dx;
@@ -73,3 +76,5 @@ export default class PositionedPiece {
         this.grid = newGrid;
     }
 }
+PositionedPiece.buffer = [...tetrominoes];
+export default PositionedPiece;
