@@ -42,7 +42,7 @@ const grid: Grid = {
   width: gridWidth,
   height: gridHeight,
   array: Array.from(
-    { length: gridHeight+5 },
+    { length: gridHeight + 5 },
     () => Array.from({ length: gridWidth }, () => false)
   )
 }
@@ -77,6 +77,14 @@ setInterval(() => {
       activePiece.move(0, -1);
     }
     lastStepTime = lastStepTime + tickDuration;
+  }
+
+  for(let i = 0; i < gridHeight; i++) {
+    const row = grid.array[i];
+    if(row.every(entry => typeof entry === 'object')) {
+      grid.array.splice(i, 1);
+      grid.array.push(Array.from({ length: gridWidth }, () => false));
+    }
   }
 
   // rendering

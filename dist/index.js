@@ -56,6 +56,13 @@ setInterval(() => {
         }
         lastStepTime = lastStepTime + tickDuration;
     }
+    for (let i = 0; i < gridHeight; i++) {
+        const row = grid.array[i];
+        if (row.every(entry => typeof entry === 'object')) {
+            grid.array.splice(i, 1);
+            grid.array.push(Array.from({ length: gridWidth }, () => false));
+        }
+    }
     // rendering
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
