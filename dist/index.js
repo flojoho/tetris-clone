@@ -14,9 +14,12 @@ const checkCollision = (dx, dy) => {
             if (entry) {
                 const x = activePiece.x + j + dx;
                 const y = activePiece.y - i + dy;
-                if (y < 0)
-                    return true;
                 if (x < 0 || x >= gridWidth)
+                    return true;
+                const gridRow = grid.array[y];
+                if (!gridRow)
+                    return true;
+                if (typeof grid.array[y][x] === 'object')
                     return true;
             }
         }
@@ -28,7 +31,7 @@ const gridHeight = 20;
 const grid = {
     width: gridWidth,
     height: gridHeight,
-    array: Array.from({ length: gridWidth }, () => Array.from({ length: gridHeight }, () => false))
+    array: Array.from({ length: gridHeight + 5 }, () => Array.from({ length: gridWidth }, () => false))
 };
 const squareWidth = 30;
 setInterval(() => {
@@ -107,5 +110,12 @@ addEventListener('keydown', e => {
     else if (keyCode === 'ArrowRight') {
         if (!checkCollision(1, 0))
             activePiece.move(1, 0);
+    }
+    else if (keyCode === 'ArrowUp') {
+        activePiece.rotateRight();
+    }
+    else if (keyCode === 'ArrowDown') {
+        if (!checkCollision(0, -1))
+            activePiece.move(0, -1);
     }
 });
