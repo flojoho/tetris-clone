@@ -1,19 +1,19 @@
-import PositionedPiece from './PositionedPiece.js';
+import ActivePiece from './ActivePiece.js';
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const fps = 50;
-const tickDuration = 500;
+const tickDuration = 800;
 let lastStepTime = Date.now();
-let activePiece = new PositionedPiece();
-const checkCollision = (dx, dy) => {
-    const pieceGrid = activePiece.grid;
+let activePiece = new ActivePiece();
+const checkCollision = (piece, dx, dy) => {
+    const pieceGrid = piece.grid;
     for (let i = 0; i < pieceGrid.length; i++) {
         const row = pieceGrid[i];
         for (let j = 0; j < row.length; j++) {
             const entry = row[j];
             if (entry) {
-                const x = activePiece.x + j + dx;
-                const y = activePiece.y - i + dy;
+                const x = piece.x + j + dx;
+                const y = piece.y - i + dy;
                 if (x < 0 || x >= gridWidth)
                     return true;
                 const gridRow = grid.array[y];
@@ -50,9 +50,9 @@ const solidifyActivePiece = () => {
 };
 setInterval(() => {
     if (Date.now() - lastStepTime > tickDuration) {
-        if (checkCollision(0, -1)) {
+        if (checkCollision(activePiece, 0, -1)) {
             solidifyActivePiece();
-            activePiece = new PositionedPiece();
+            activePiece = new ActivePiece();
         }
         else {
             activePiece.move(0, -1);
@@ -66,6 +66,14 @@ setInterval(() => {
             grid.array.push(Array.from({ length: gridWidth }, () => false));
         }
     }
+    /*const previewPiece = new PositionedPiece(
+      activePiece.x,
+      activePiece.y,
+      activePiece.grid
+    )*/
+    /*while(!checkCollision(previewPiece, 0, -1)) {
+      previewPiece.move(0, -1);
+    }*/
     // rendering
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -114,25 +122,25 @@ setInterval(() => {
 addEventListener('keydown', e => {
     const keyCode = e.code;
     if (keyCode === 'ArrowLeft') {
-        if (!checkCollision(-1, 0))
+        if (!checkCollision(activePiece, -1, 0))
             activePiece.move(-1, 0);
     }
     else if (keyCode === 'ArrowRight') {
-        if (!checkCollision(1, 0))
+        if (!checkCollision(activePiece, 1, 0))
             activePiece.move(1, 0);
     }
     else if (keyCode === 'ArrowUp') {
         activePiece.rotateRight();
     }
     else if (keyCode === 'ArrowDown') {
-        if (!checkCollision(0, -1))
+        if (!checkCollision(activePiece, 0, -1))
             activePiece.move(0, -1);
     }
     else if (keyCode === 'Space') {
-        while (!checkCollision(0, -1)) {
+        while (!checkCollision(activePiece, 0, -1)) {
             activePiece.move(0, -1);
         }
         solidifyActivePiece();
-        activePiece = new PositionedPiece();
+        activePiece = new ActivePiece();
     }
 });
