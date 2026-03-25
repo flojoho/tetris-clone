@@ -1,4 +1,5 @@
 import ActivePiece from './ActivePiece.js';
+import PositionedPiece from './PositionedPiece.js';
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const fps = 50;
@@ -66,14 +67,10 @@ setInterval(() => {
             grid.array.push(Array.from({ length: gridWidth }, () => false));
         }
     }
-    /*const previewPiece = new PositionedPiece(
-      activePiece.x,
-      activePiece.y,
-      activePiece.grid
-    )*/
-    /*while(!checkCollision(previewPiece, 0, -1)) {
-      previewPiece.move(0, -1);
-    }*/
+    const previewPiece = new PositionedPiece(activePiece.x, activePiece.y, activePiece.grid);
+    while (!checkCollision(previewPiece, 0, -1)) {
+        previewPiece.move(0, -1);
+    }
     // rendering
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -99,7 +96,7 @@ setInterval(() => {
         for (let j = 0; j < row.length; j++) {
             const entry = row[j];
             if (entry) {
-                squares.push({ x: activePiece.x + j, y: activePiece.y - i, color: 'white' });
+                squares.push({ x: activePiece.x + j, y: activePiece.y - i, color: 'white' }, { x: previewPiece.x + j, y: previewPiece.y - i, color: 'whiteTransparent' });
             }
         }
     }
@@ -113,7 +110,10 @@ setInterval(() => {
         }
     }
     for (const square of squares) {
-        ctx.fillStyle = 'white';
+        if (square.color === 'white')
+            ctx.fillStyle = 'white';
+        if (square.color === 'whiteTransparent')
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
         ctx.beginPath();
         ctx.rect(originX + square.x * squareWidth, originY - square.y * squareWidth - squareWidth, squareWidth, squareWidth);
         ctx.fill();

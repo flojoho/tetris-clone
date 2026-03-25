@@ -48,7 +48,7 @@ const grid: Grid = {
   )
 }
 
-type Color = 'white';
+type Color = 'white' | 'whiteTransparent';
 
 type Square = {
   x: number,
@@ -92,14 +92,14 @@ setInterval(() => {
     }
   }
 
-  /*const previewPiece = new PositionedPiece(
+  const previewPiece = new PositionedPiece(
     activePiece.x,
     activePiece.y,
     activePiece.grid
-  )*/
-  /*while(!checkCollision(previewPiece, 0, -1)) {
+  )
+  while(!checkCollision(previewPiece, 0, -1)) {
     previewPiece.move(0, -1);
-  }*/
+  }
 
   // rendering
   ctx.fillStyle = 'black';
@@ -136,7 +136,8 @@ setInterval(() => {
       const entry = row[j];
       if(entry) {
         squares.push(
-          { x: activePiece.x + j, y: activePiece.y - i, color: 'white' }
+          { x: activePiece.x + j, y: activePiece.y - i, color: 'white' },
+          { x: previewPiece.x + j, y: previewPiece.y - i, color: 'whiteTransparent' }
         );
       }
     }
@@ -155,7 +156,8 @@ setInterval(() => {
   }
 
   for(const square of squares) {
-    ctx.fillStyle = 'white';
+    if(square.color === 'white') ctx.fillStyle = 'white';
+    if(square.color === 'whiteTransparent') ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
     ctx.beginPath();
     ctx.rect(
       originX + square.x*squareWidth,
