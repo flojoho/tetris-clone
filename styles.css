@@ -1,3 +1,12 @@
+:root {
+  --white: hsl(0, 0%, 100%);
+  --light-gray: hsl(0, 0%, 85%);
+  --gray: hsl(0, 0%, 50%);
+  --dark-gray: hsl(0, 0%, 18%);
+  --black: hsl(0, 0%, 10%);
+  --full-black: hsl(0, 0%, 0%);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -8,7 +17,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: hsl(0, 0%, 10%);
+  background-color: var(--full-black);
   width: 100vw;
   height: 100vh;
 }
