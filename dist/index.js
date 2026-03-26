@@ -15,24 +15,24 @@ const checkCollision = (piece, dx, dy) => {
             if (entry) {
                 const x = piece.x + j + dx;
                 const y = piece.y - i + dy;
-                if (x < 0 || x >= gridWidth)
+                if (x < 0 || x >= mainGridWidth)
                     return true;
-                const gridRow = grid.array[y];
-                if (!gridRow)
+                const mainGridRow = mainGrid.array[y];
+                if (!mainGridRow)
                     return true;
-                if (typeof grid.array[y][x] === 'object')
+                if (typeof mainGrid.array[y][x] === 'object')
                     return true;
             }
         }
     }
     return false;
 };
-const gridWidth = 10;
-const gridHeight = 20;
-const grid = {
-    width: gridWidth,
-    height: gridHeight,
-    array: Array.from({ length: gridHeight + 5 }, () => Array.from({ length: gridWidth }, () => false))
+const mainGridWidth = 10;
+const mainGridHeight = 20;
+const mainGrid = {
+    width: mainGridWidth,
+    height: mainGridHeight,
+    array: Array.from({ length: mainGridHeight + 5 }, () => Array.from({ length: mainGridWidth }, () => false))
 };
 const squareWidth = 30;
 const solidifyActivePiece = () => {
@@ -44,7 +44,7 @@ const solidifyActivePiece = () => {
             if (entry) {
                 const x = activePiece.x + j;
                 const y = activePiece.y - i;
-                grid.array[y][x] = { x, y, color: 'white' };
+                mainGrid.array[y][x] = { x, y, color: 'white' };
             }
         }
     }
@@ -60,11 +60,11 @@ setInterval(() => {
         }
         lastStepTime = lastStepTime + tickDuration;
     }
-    for (let i = 0; i < gridHeight; i++) {
-        const row = grid.array[i];
+    for (let i = 0; i < mainGridHeight; i++) {
+        const row = mainGrid.array[i];
         if (row.every(entry => typeof entry === 'object')) {
-            grid.array.splice(i, 1);
-            grid.array.push(Array.from({ length: gridWidth }, () => false));
+            mainGrid.array.splice(i, 1);
+            mainGrid.array.push(Array.from({ length: mainGridWidth }, () => false));
         }
     }
     const previewPiece = new PositionedPiece(activePiece.x, activePiece.y, activePiece.grid);
@@ -76,13 +76,13 @@ setInterval(() => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
-    const originX = centerX - grid.width / 2 * squareWidth;
-    const originY = centerY + grid.height / 2 * squareWidth;
+    const originX = centerX - mainGrid.width / 2 * squareWidth;
+    const originY = centerY + mainGrid.height / 2 * squareWidth;
     ctx.strokeStyle = 'gray';
     ctx.beginPath();
-    ctx.strokeRect(originX, centerY - grid.height / 2 * squareWidth, grid.width * squareWidth, grid.height * squareWidth);
-    for (let i = 1; i < grid.width; i++) {
-        for (let j = 1; j < grid.height; j++) {
+    ctx.strokeRect(originX, centerY - mainGrid.height / 2 * squareWidth, mainGrid.width * squareWidth, mainGrid.height * squareWidth);
+    for (let i = 1; i < mainGrid.width; i++) {
+        for (let j = 1; j < mainGrid.height; j++) {
             ctx.fillStyle = 'gray';
             ctx.beginPath();
             ctx.arc(originX + i * squareWidth, originY - j * squareWidth, 1, 0, 2 * Math.PI);
@@ -100,8 +100,8 @@ setInterval(() => {
             }
         }
     }
-    for (let i = 0; i < grid.array.length; i++) {
-        const row = grid.array[i];
+    for (let i = 0; i < mainGrid.array.length; i++) {
+        const row = mainGrid.array[i];
         for (let j = 0; j < row.length; j++) {
             const entry = row[j];
             if (entry) {
