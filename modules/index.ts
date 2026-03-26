@@ -1,5 +1,7 @@
 import ActivePiece, { Tetromino } from './ActivePiece.js';
 import PositionedPiece from './PositionedPiece.js';
+import MainGrid from './MainGrid.js';
+import Square from './Square.js';
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
@@ -11,6 +13,8 @@ let lastStepTime = Date.now();
 
 let activePiece = new ActivePiece();
 
+const mainGrid = new MainGrid(10, 20);
+
 const checkCollision = (piece: PositionedPiece, dx: number, dy: number) => {
   const pieceGrid = piece.grid;
   for(let i = 0; i < pieceGrid.length; i++) {
@@ -20,7 +24,7 @@ const checkCollision = (piece: PositionedPiece, dx: number, dy: number) => {
       if(entry) {
         const x = piece.x + j + dx;
         const y = piece.y - i + dy;
-        if(x < 0 || x >= mainGridWidth) return true;
+        if(x < 0 || x >= mainGrid.width) return true;
 
         const mainGridRow = mainGrid.array[y];
         if(!mainGridRow) return true;
@@ -30,33 +34,6 @@ const checkCollision = (piece: PositionedPiece, dx: number, dy: number) => {
   }
   return false;
 }
-
-type MainGrid = {
-  width: number,
-  height: number,
-  array: (Square | false)[][]
-}
-
-const mainGridWidth = 10;
-const mainGridHeight = 20;
-const mainGrid: MainGrid = {
-  width: mainGridWidth,
-  height: mainGridHeight,
-  array: Array.from(
-    { length: mainGridHeight + 5 },
-    () => Array.from({ length: mainGridWidth }, () => false)
-  )
-}
-
-type Color = 'white' | 'whiteTransparent';
-
-type Square = {
-  x: number,
-  y: number,
-  color: Color
-}
-
-const squareWidth = 30;
 
 const solidifyActivePiece = () => {
   const pieceGrid = activePiece.grid;
@@ -84,11 +61,11 @@ setInterval(() => {
     lastStepTime = lastStepTime + tickDuration;
   }
 
-  for(let i = 0; i < mainGridHeight; i++) {
+  for(let i = 0; i < mainGrid.height; i++) {
     const row = mainGrid.array[i];
     if(row.every(entry => typeof entry === 'object')) {
       mainGrid.array.splice(i, 1);
-      mainGrid.array.push(Array.from({ length: mainGridWidth }, () => false));
+      mainGrid.array.push(Array.from({ length: mainGrid.width }, () => false));
     }
   }
 
@@ -107,23 +84,23 @@ setInterval(() => {
 
   const centerX = canvas.width/2;
   const centerY = canvas.height/2;
-  const originX = centerX - mainGrid.width/2 * squareWidth;
-  const originY = centerY + mainGrid.height/2 * squareWidth;
+  const originX = centerX - mainGrid.width/2 * Square.width;
+  const originY = centerY + mainGrid.height/2 * Square.width;
 
   ctx.strokeStyle = 'gray';
   ctx.beginPath();
   ctx.strokeRect(
     originX,
-    centerY - mainGrid.height/2 * squareWidth,
-    mainGrid.width * squareWidth,
-    mainGrid.height * squareWidth
+    centerY - mainGrid.height/2 * Square.width,
+    mainGrid.width * Square.width,
+    mainGrid.height * Square.width
   );
 
   for(let i = 1; i < mainGrid.width; i++) {
     for(let j = 1; j < mainGrid.height; j++) {
       ctx.fillStyle = 'gray';
       ctx.beginPath();
-      ctx.arc(originX + i*squareWidth, originY - j*squareWidth, 1, 0, 2 * Math.PI);
+      ctx.arc(originX + i*Square.width, originY - j*Square.width, 1, 0, 2 * Math.PI);
       ctx.fill();
     }
   }
@@ -160,10 +137,10 @@ setInterval(() => {
     if(square.color === 'whiteTransparent') ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
     ctx.beginPath();
     ctx.rect(
-      originX + square.x*squareWidth,
-      originY - square.y*squareWidth - squareWidth,
-      squareWidth,
-      squareWidth
+      originX + square.x*Square.width,
+      originY - square.y*Square.width - Square.width,
+      Square.width,
+      Square.width
     );
     ctx.fill();
   }
