@@ -15,26 +15,6 @@ let activePiece = new ActivePiece();
 
 const mainGrid = new MainGrid(10, 20);
 
-const checkCollision = (piece: PositionedPiece, dx: number, dy: number) => {
-  const pieceGrid = piece.grid;
-  for(let i = 0; i < pieceGrid.length; i++) {
-    const row = pieceGrid[i];
-    for(let j = 0; j < row.length; j++) {
-      const entry = row[j];
-      if(entry) {
-        const x = piece.x + j + dx;
-        const y = piece.y - i + dy;
-        if(x < 0 || x >= mainGrid.width) return true;
-
-        const mainGridRow = mainGrid.array[y];
-        if(!mainGridRow) return true;
-        if(typeof mainGrid.array[y][x] === 'object') return true;
-      }
-    }
-  }
-  return false;
-}
-
 const solidifyActivePiece = () => {
   const pieceGrid = activePiece.grid;
   for(let i = 0; i < pieceGrid.length; i++) {
@@ -52,7 +32,7 @@ const solidifyActivePiece = () => {
 
 setInterval(() => {
   if(Date.now() - lastStepTime > tickDuration) {
-    if(checkCollision(activePiece, 0, -1)) {
+    if(mainGrid.checkCollision(activePiece, 0, -1)) {
       solidifyActivePiece();
       activePiece = new ActivePiece();
     } else {
@@ -74,7 +54,7 @@ setInterval(() => {
     activePiece.y,
     activePiece.grid
   )
-  while(!checkCollision(previewPiece, 0, -1)) {
+  while(!mainGrid.checkCollision(previewPiece, 0, -1)) {
     previewPiece.move(0, -1);
   }
 
@@ -149,15 +129,15 @@ setInterval(() => {
 addEventListener('keydown', e => {
   const keyCode = e.code;
   if(keyCode === 'ArrowLeft') {
-    if(!checkCollision(activePiece, -1, 0)) activePiece.move(-1, 0);
+    if(!mainGrid.checkCollision(activePiece, -1, 0)) activePiece.move(-1, 0);
   } else if(keyCode === 'ArrowRight') {
-    if(!checkCollision(activePiece, 1, 0)) activePiece.move(1, 0);
+    if(!mainGrid.checkCollision(activePiece, 1, 0)) activePiece.move(1, 0);
   } else if(keyCode === 'ArrowUp') {
     activePiece.rotateRight();
   } else if(keyCode === 'ArrowDown') {
-    if(!checkCollision(activePiece, 0, -1)) activePiece.move(0, -1);
+    if(!mainGrid.checkCollision(activePiece, 0, -1)) activePiece.move(0, -1);
   } else if(keyCode === 'Space') {
-    while(!checkCollision(activePiece, 0, -1)) {
+    while(!mainGrid.checkCollision(activePiece, 0, -1)) {
       activePiece.move(0, -1);
     }
     solidifyActivePiece();
