@@ -1,4 +1,4 @@
-import ActivePiece, { Tetromino } from './ActivePiece.js';
+import ActivePiece from './ActivePiece.js';
 import PositionedPiece from './PositionedPiece.js';
 import MainGrid from './MainGrid.js';
 import Square from './Square.js';

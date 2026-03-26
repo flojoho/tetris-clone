@@ -1,4 +1,5 @@
-import { Tetromino } from "./ActivePiece.js"; 
+
+export type Tetromino = boolean[][];
 
 class PositionedPiece {
   x: number;

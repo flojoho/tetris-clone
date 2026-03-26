@@ -4,7 +4,9 @@ import PositionedPiece from "./PositionedPiece";
 export default class MainGrid {
   public width: number;
   public height: number;
-  public array: (Square | false)[][]
+  public array: (Square | false)[][];
+
+  public static currentInstance: MainGrid;
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -12,7 +14,8 @@ export default class MainGrid {
     this.array = Array.from(
       { length: height + 5 },
       () => Array.from({ length: width }, () => false)
-    )
+    );
+    MainGrid.currentInstance = this;
   }
 
   public checkCollision(piece: PositionedPiece, dx: number, dy: number) {

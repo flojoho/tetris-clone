@@ -1,6 +1,5 @@
-import PositionedPiece from "./PositionedPiece.js";
-
-export type Tetromino = boolean[][];
+import MainGrid from "./MainGrid.js";
+import PositionedPiece, { Tetromino } from "./PositionedPiece.js";
 
 const tetrominoes = [
   [
@@ -54,7 +53,7 @@ export default class ActivePiece extends PositionedPiece {
     ActivePiece.buffer.splice(randomIndex, 1);
   }
 
-  rotateLeft() {
+  public rotateLeft() {
     const newGrid: Tetromino = [];
     const rows = this.grid[0].length;
     for(let i = rows - 1; i >= 0; i--) {
@@ -64,10 +63,13 @@ export default class ActivePiece extends PositionedPiece {
       }
       newGrid.push(row);
     }
+
+    if(MainGrid.currentInstance.checkCollision(new PositionedPiece(this.x, this.y, newGrid), 0, 0)) return; // temporary rotation collision fix
+
     this.grid = newGrid;
   }
 
-  rotateRight() {
+  public rotateRight() {
     const newGrid: Tetromino = [];
     const rows = this.grid[0].length;
     for(let i = 0; i < rows; i++) {
@@ -77,6 +79,7 @@ export default class ActivePiece extends PositionedPiece {
       }
       newGrid.push(row);
     }
+    if(MainGrid.currentInstance.checkCollision(new PositionedPiece(this.x, this.y, newGrid), 0, 0)) return; // temporary rotation collision fix
     this.grid = newGrid;
   }
 }

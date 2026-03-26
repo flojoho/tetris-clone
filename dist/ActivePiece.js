@@ -1,3 +1,4 @@
+import MainGrid from "./MainGrid.js";
 import PositionedPiece from "./PositionedPiece.js";
 const tetrominoes = [
     [
@@ -56,6 +57,8 @@ class ActivePiece extends PositionedPiece {
             }
             newGrid.push(row);
         }
+        if (MainGrid.currentInstance.checkCollision(new PositionedPiece(this.x, this.y, newGrid), 0, 0))
+            return; // temporary rotation collision fix
         this.grid = newGrid;
     }
     rotateRight() {
@@ -68,6 +71,8 @@ class ActivePiece extends PositionedPiece {
             }
             newGrid.push(row);
         }
+        if (MainGrid.currentInstance.checkCollision(new PositionedPiece(this.x, this.y, newGrid), 0, 0))
+            return; // temporary rotation collision fix
         this.grid = newGrid;
     }
 }
