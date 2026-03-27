@@ -126,21 +126,72 @@ setInterval(() => {
   }
 }, 1000/fps);
 
+type KeyEvents = {
+  [key: string]: number | undefined
+}
+const keyEvents: KeyEvents = {};
+
+const primaryTimeout = 133;
+const secondaryTimeout = 20;
+
+const addKeyDownEvent = (keyCode: string, action: () => void) => {
+  if(keyEvents[keyCode]) return;
+  action();
+  const repeatAction = () => {
+    action();
+    keyEvents[keyCode] = setTimeout(repeatAction, secondaryTimeout);
+  }
+  keyEvents[keyCode] = setTimeout(repeatAction, primaryTimeout);
+};
+const removeKeyDownEvent = (keyCode: string) => {
+  const timeoutId = keyEvents[keyCode];
+  if(timeoutId) {
+    clearInterval(timeoutId);
+    keyEvents[keyCode] = undefined;
+  }
+};
+
 addEventListener('keydown', e => {
   const keyCode = e.code;
   if(keyCode === 'ArrowLeft') {
-    if(!mainGrid.checkCollision(activePiece, -1, 0)) activePiece.move(-1, 0);
+    addKeyDownEvent(
+      'ArrowLeft',
+      () => {
+        if(!mainGrid.checkCollision(activePiece, -1, 0)) activePiece.move(-1, 0);
+      }
+    );
   } else if(keyCode === 'ArrowRight') {
-    if(!mainGrid.checkCollision(activePiece, 1, 0)) activePiece.move(1, 0);
+    addKeyDownEvent(
+      'ArrowRight',
+      () => {
+        if(!mainGrid.checkCollision(activePiece, 1, 0)) activePiece.move(1, 0);
+      }
+    );
+  } else if(keyCode === 'ArrowDown') {
+    addKeyDownEvent(
+      'ArrowDown',
+      () => {
+        if(!mainGrid.checkCollision(activePiece, 0, -1)) activePiece.move(0, -1);
+      }
+    );
   } else if(keyCode === 'ArrowUp') {
     activePiece.rotateRight();
-  } else if(keyCode === 'ArrowDown') {
-    if(!mainGrid.checkCollision(activePiece, 0, -1)) activePiece.move(0, -1);
   } else if(keyCode === 'Space') {
     while(!mainGrid.checkCollision(activePiece, 0, -1)) {
       activePiece.move(0, -1);
     }
     solidifyActivePiece();
     activePiece = new ActivePiece();
+  }
+});
+
+addEventListener('keyup', e => {
+  const keyCode = e.code;
+  if(keyCode === 'ArrowLeft') {
+    removeKeyDownEvent('ArrowLeft');
+  } else if(keyCode === 'ArrowRight') {
+    removeKeyDownEvent('ArrowRight');
+  } else if(keyCode === 'ArrowDown') {
+    removeKeyDownEvent('ArrowDown');
   }
 });
