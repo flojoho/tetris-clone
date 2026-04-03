@@ -1,5 +1,6 @@
 import Square from "./Square";
 import PositionedPiece from "./PositionedPiece";
+import ActivePiece from "./ActivePiece";
 
 export default class MainGrid {
   public width: number;
@@ -36,5 +37,20 @@ export default class MainGrid {
       }
     }
     return false;
+  }
+
+  public solidifyPiece(activePiece: ActivePiece) {
+    const pieceGrid = activePiece.grid;
+    for(let i = 0; i < pieceGrid.length; i++) {
+      const row = pieceGrid[i];
+      for(let j = 0; j < row.length; j++) {
+        const entry = row[j];
+        if(entry) {
+          const x = activePiece.x + j;
+          const y = activePiece.y - i;
+          this.array[y][x] = { x, y, color: 'white' };
+        }
+      }
+    }
   }
 }

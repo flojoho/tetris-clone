@@ -26,4 +26,18 @@ export default class MainGrid {
         }
         return false;
     }
+    solidifyPiece(activePiece) {
+        const pieceGrid = activePiece.grid;
+        for (let i = 0; i < pieceGrid.length; i++) {
+            const row = pieceGrid[i];
+            for (let j = 0; j < row.length; j++) {
+                const entry = row[j];
+                if (entry) {
+                    const x = activePiece.x + j;
+                    const y = activePiece.y - i;
+                    this.array[y][x] = { x, y, color: 'white' };
+                }
+            }
+        }
+    }
 }
