@@ -12,7 +12,7 @@ setInterval(() => {
     if (Date.now() - game.lastStepTime > tickDuration) {
         if (mainGrid.checkCollision(activePiece, 0, -1)) {
             mainGrid.solidifyPiece(activePiece);
-            activePiece = new ActivePiece();
+            game.activePiece = new ActivePiece();
         }
         else {
             activePiece.move(0, -1);
@@ -25,6 +25,9 @@ setInterval(() => {
             mainGrid.array.splice(i, 1);
             mainGrid.array.push(Array.from({ length: mainGrid.width }, () => false));
         }
+    }
+    if (mainGrid.array[mainGrid.height].some(entry => entry !== false)) {
+        game = new Game();
     }
     const previewPiece = new PositionedPiece(activePiece.x, activePiece.y, activePiece.grid);
     while (!mainGrid.checkCollision(previewPiece, 0, -1)) {
