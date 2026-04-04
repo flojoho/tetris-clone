@@ -13,10 +13,16 @@ export default class Game {
   public activePiece: ActivePiece;
   public mainGrid: MainGrid;
 
+  public static eventListeners: { type: string, listener: (e: Event) => void }[] = [];
+
   constructor() {
     this.lastStepTime = Date.now();
     this.mainGrid = new MainGrid(10, 20);
     this.activePiece = new ActivePiece();
+
+    for(const event of Game.eventListeners) {
+      removeEventListener(event.type, event.listener);
+    }
 
     const keyEvents: KeyEvents = {};
 
@@ -37,8 +43,8 @@ export default class Game {
       }
     };
 
-    addEventListener('keydown', e => {
-      const keyCode = e.code;
+    const keydownListener = (e: Event) => {
+      const keyCode = (e as KeyboardEvent).code;
       if(keyCode === 'ArrowLeft') {
         addKeyDownEvent(
           'ArrowLeft',
@@ -69,10 +75,12 @@ export default class Game {
         this.mainGrid.solidifyPiece(this.activePiece);
         this.activePiece = new ActivePiece();
       }
-    });
+    };
+    addEventListener('keydown', keydownListener);
+    Game.eventListeners.push({ type: 'keydown', listener: keydownListener });
 
-    addEventListener('keyup', e => {
-      const keyCode = e.code;
+    const keyupListener = (e: Event) => {
+      const keyCode = (e as KeyboardEvent).code;
       if(keyCode === 'ArrowLeft') {
         removeKeyDownEvent('ArrowLeft');
       } else if(keyCode === 'ArrowRight') {
@@ -80,6 +88,8 @@ export default class Game {
       } else if(keyCode === 'ArrowDown') {
         removeKeyDownEvent('ArrowDown');
       }
-    });
+    };
+    addEventListener('keyup', keyupListener);
+    Game.eventListeners.push({ type: 'keyup', listener: keyupListener });
   }
 }

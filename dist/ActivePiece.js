@@ -44,7 +44,7 @@ class ActivePiece extends PositionedPiece {
         if (ActivePiece.buffer.length === 0)
             ActivePiece.buffer = [...tetrominoes];
         const randomIndex = Math.floor(Math.random() * ActivePiece.buffer.length);
-        super(4, 22, ActivePiece.buffer[randomIndex]);
+        super(4, 23, ActivePiece.buffer[randomIndex]);
         ActivePiece.buffer.splice(randomIndex, 1);
     }
     rotateLeft() {

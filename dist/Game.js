@@ -2,11 +2,14 @@ import ActivePiece from "./ActivePiece.js";
 import MainGrid from "./MainGrid.js";
 const primaryTimeout = 133;
 const secondaryTimeout = 20;
-export default class Game {
+class Game {
     constructor() {
         this.lastStepTime = Date.now();
         this.mainGrid = new MainGrid(10, 20);
         this.activePiece = new ActivePiece();
+        for (const event of Game.eventListeners) {
+            removeEventListener(event.type, event.listener);
+        }
         const keyEvents = {};
         const addKeyDownEvent = (keyCode, action) => {
             if (keyEvents[keyCode])
@@ -25,7 +28,7 @@ export default class Game {
                 keyEvents[keyCode] = undefined;
             }
         };
-        addEventListener('keydown', e => {
+        const keydownListener = (e) => {
             const keyCode = e.code;
             if (keyCode === 'ArrowLeft') {
                 addKeyDownEvent('ArrowLeft', () => {
@@ -55,8 +58,10 @@ export default class Game {
                 this.mainGrid.solidifyPiece(this.activePiece);
                 this.activePiece = new ActivePiece();
             }
-        });
-        addEventListener('keyup', e => {
+        };
+        addEventListener('keydown', keydownListener);
+        Game.eventListeners.push({ type: 'keydown', listener: keydownListener });
+        const keyupListener = (e) => {
             const keyCode = e.code;
             if (keyCode === 'ArrowLeft') {
                 removeKeyDownEvent('ArrowLeft');
@@ -67,6 +72,10 @@ export default class Game {
             else if (keyCode === 'ArrowDown') {
                 removeKeyDownEvent('ArrowDown');
             }
-        });
+        };
+        addEventListener('keyup', keyupListener);
+        Game.eventListeners.push({ type: 'keyup', listener: keyupListener });
     }
 }
+Game.eventListeners = [];
+export default Game;
