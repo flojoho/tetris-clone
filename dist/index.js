@@ -5,7 +5,7 @@ import Game from './Game.js';
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const fps = 50;
-const tickDuration = 800;
+const tickDuration = 1200;
 let game = new Game();
 setInterval(() => {
     let { activePiece, mainGrid } = game;
@@ -40,9 +40,6 @@ setInterval(() => {
     const centerY = canvas.height / 2;
     const originX = centerX - mainGrid.width / 2 * Square.width;
     const originY = centerY + mainGrid.height / 2 * Square.width;
-    ctx.strokeStyle = 'gray';
-    ctx.beginPath();
-    ctx.strokeRect(originX, centerY - mainGrid.height / 2 * Square.width, mainGrid.width * Square.width, mainGrid.height * Square.width);
     for (let i = 1; i < mainGrid.width; i++) {
         for (let j = 1; j < mainGrid.height; j++) {
             ctx.fillStyle = 'gray';
@@ -72,6 +69,8 @@ setInterval(() => {
         }
     }
     for (const square of squares) {
+        if (square.y >= 20)
+            continue;
         if (square.color === 'white')
             ctx.fillStyle = 'white';
         if (square.color === 'whiteTransparent')
@@ -80,4 +79,9 @@ setInterval(() => {
         ctx.rect(originX + square.x * Square.width, originY - square.y * Square.width - Square.width, Square.width, Square.width);
         ctx.fill();
     }
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = 'gray';
+    ctx.beginPath();
+    ctx.strokeRect(originX, centerY - mainGrid.height / 2 * Square.width, mainGrid.width * Square.width, mainGrid.height * Square.width);
 }, 1000 / fps);
