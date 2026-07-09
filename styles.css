@@ -1,6 +1,6 @@
 :root {
   --white: hsl(0, 0%, 100%);
-  --light-gray: hsl(0, 0%, 85%);
+  --light-gray: hsl(0, 0%, 75%);
   --gray: hsl(0, 0%, 50%);
   --dark-gray: hsl(0, 0%, 18%);
   --black: hsl(0, 0%, 10%);
@@ -17,7 +17,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--full-black);
+  background-color: var(--black);
   width: 100vw;
   height: 100vh;
 }

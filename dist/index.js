@@ -7,6 +7,9 @@ const ctx = canvas.getContext('2d');
 const fps = 50;
 const tickDuration = 1200;
 let game = new Game();
+const getCssVariable = (variableName) => {
+    return getComputedStyle(document.documentElement).getPropertyValue(variableName);
+};
 setInterval(() => {
     let { activePiece, mainGrid } = game;
     if (Date.now() - game.lastStepTime > tickDuration) {
@@ -34,7 +37,7 @@ setInterval(() => {
         previewPiece.move(0, -1);
     }
     // rendering
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = getCssVariable('--black');
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
@@ -72,7 +75,7 @@ setInterval(() => {
         if (square.y >= 20)
             continue;
         if (square.color === 'white')
-            ctx.fillStyle = 'white';
+            ctx.fillStyle = getCssVariable('--white');
         if (square.color === 'whiteTransparent')
             ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
         ctx.beginPath();

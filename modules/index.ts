@@ -11,6 +11,10 @@ const tickDuration = 1200;
 
 let game = new Game();
 
+const getCssVariable = (variableName: string) => {
+  return getComputedStyle(document.documentElement).getPropertyValue(variableName);
+}
+
 setInterval(() => {
   let { activePiece, mainGrid } = game;
   
@@ -46,7 +50,7 @@ setInterval(() => {
   }
 
   // rendering
-  ctx.fillStyle = 'black';
+  ctx.fillStyle = getCssVariable('--black');
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const centerX = canvas.width/2;
@@ -92,7 +96,7 @@ setInterval(() => {
 
   for(const square of squares) {
     if(square.y >= 20) continue;
-    if(square.color === 'white') ctx.fillStyle = 'white';
+    if(square.color === 'white') ctx.fillStyle = getCssVariable('--white');
     if(square.color === 'whiteTransparent') ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
     ctx.beginPath();
     ctx.rect(
